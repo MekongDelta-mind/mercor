@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    networks:
+      - odoo-net
+
+  odoo:
+    image: odoo:15.0
+    env_file: .env
+    depends_on:
+      - postgres
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - odoo-net
+
+volumes:
+  odoo-db-data:
+  odoo-data:
+
+networks:
+  odoo-net:
